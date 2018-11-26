@@ -1,0 +1,6 @@
+authors = ["Yupei Qi <qiyupei@gmail.com>"]
+name = "Nuklear"
+uuid = "c56d6e7e-f17c-11e8-0f80-f72558d7afa6"
+version = "0.1.0"
+
+[deps]
