@@ -1,5 +1,8 @@
 module Nuklear
 
-greet() = print("Hello World!")
+include("LibNuklear.jl")
+using .LibNuklear
+
+
 
 end # module
