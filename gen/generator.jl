@@ -1,5 +1,14 @@
 using Clang
 
+# don't forgot to add these flags in the front of the header, the most easy way is to
+# do a manually copy-paste:
+# define NK_IMPLEMENTATION
+# define NK_INCLUDE_FIXED_TYPES
+# define NK_INCLUDE_DEFAULT_ALLOCATOR
+# define NK_INCLUDE_STANDARD_IO
+# define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+# define NK_INCLUDE_FONT_BAKING
+# define NK_INCLUDE_DEFAULT_FONT
 const NUKLEAR_H = joinpath(@__DIR__, "..", "deps", "usr", "include", "nuklear.h") |> normpath
 
 # create a work context

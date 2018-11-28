@@ -20,15 +20,18 @@ const NK_SCROLLBAR_HIDING_TIMEOUT = Float32(4.0)
 # Skipping MacroDefinition: NK_MIN ( a , b ) ( ( a ) < ( b ) ? ( a ) : ( b ) )
 # Skipping MacroDefinition: NK_MAX ( a , b ) ( ( a ) < ( b ) ? ( b ) : ( a ) )
 # Skipping MacroDefinition: NK_CLAMP ( i , v , x ) ( NK_MAX ( NK_MIN ( v , x ) , i ) )
-# Skipping MacroDefinition: NK_INT8 signed char
-# Skipping MacroDefinition: NK_UINT8 unsigned char
-# Skipping MacroDefinition: NK_INT16 signed short
-# Skipping MacroDefinition: NK_UINT16 unsigned short
-# Skipping MacroDefinition: NK_INT32 signed int
-# Skipping MacroDefinition: NK_UINT32 unsigned int
-# Skipping MacroDefinition: NK_SIZE_TYPE unsigned int
-# Skipping MacroDefinition: NK_POINTER_TYPE unsigned int
+
+const NK_INT8 = int8_t
+const NK_UINT8 = uint8_t
+const NK_INT16 = int16_t
+const NK_UINT16 = uint16_t
+const NK_INT32 = int32_t
+const NK_UINT32 = uint32_t
+const NK_SIZE_TYPE = uintptr_t
+const NK_POINTER_TYPE = uintptr_t
+
 # Skipping MacroDefinition: nk_foreach ( c , ctx ) for ( ( c ) = nk__begin ( ctx ) ; ( c ) != 0 ; ( c ) = nk__next ( ctx , c ) )
+# Skipping MacroDefinition: nk_draw_foreach ( cmd , ctx , b ) for ( ( cmd ) = nk__draw_begin ( ctx , b ) ; ( cmd ) != 0 ; ( cmd ) = nk__draw_next ( cmd , b , ctx ) )
 # Skipping MacroDefinition: nk_tree_push ( ctx , type , title , state ) nk_tree_push_hashed ( ctx , type , title , state , NK_FILE_LINE , nk_strlen ( NK_FILE_LINE ) , __LINE__ )
 # Skipping MacroDefinition: nk_tree_push_id ( ctx , type , title , state , id ) nk_tree_push_hashed ( ctx , type , title , state , NK_FILE_LINE , nk_strlen ( NK_FILE_LINE ) , id )
 # Skipping MacroDefinition: nk_tree_image_push ( ctx , type , img , title , state ) nk_tree_image_push_hashed ( ctx , type , img , title , state , NK_FILE_LINE , nk_strlen ( NK_FILE_LINE ) , __LINE__ )
@@ -38,6 +41,10 @@ const NK_SCROLLBAR_HIDING_TIMEOUT = Float32(4.0)
 
 const NK_TEXTEDIT_UNDOSTATECOUNT = 99
 const NK_TEXTEDIT_UNDOCHARCOUNT = 999
+
+# Skipping MacroDefinition: NK_VERTEX_LAYOUT_END NK_VERTEX_ATTRIBUTE_COUNT , NK_FORMAT_COUNT , 0
+# Skipping MacroDefinition: nk_draw_list_foreach ( cmd , can , b ) for ( ( cmd ) = nk__draw_list_begin ( can , b ) ; ( cmd ) != 0 ; ( cmd ) = nk__draw_list_next ( cmd , b , can ) )
+
 const NK_MAX_LAYOUT_ROW_TEMPLATE_COLUMNS = 16
 const NK_CHART_MAX_SLOT = 4
 const NK_WINDOW_MAX_NAME = 64
@@ -79,27 +86,110 @@ const NK_MAX_FLOAT_PRECISION = 2
 # Skipping MacroDefinition: NK_CONTAINER_OF ( ptr , type , member ) ( type * ) ( ( void * ) ( ( char * ) ( 1 ? ( ptr ) : & ( ( type * ) 0 ) -> member ) - NK_OFFSETOF ( type , member ) ) )
 # Skipping MacroDefinition: NK_ALIGNOF ( t ) ( ( char * ) ( & ( ( struct { char c ; t _h ; } * ) 0 ) -> _h ) - ( char * ) 0 )
 
-const nk_char = UInt8
-const nk_uchar = Cuchar
-const nk_byte = Cuchar
+const NK_POOL_DEFAULT_CAPACITY = 16
+const NK_DEFAULT_COMMAND_BUFFER_SIZE = 4 * 1024
+const NK_BUFFER_DEFAULT_INITIAL_SIZE = 4 * 1024
+
+# Skipping MacroDefinition: NK_ASSERT ( expr ) assert ( expr )
+
+const NK_MEMSET = nk_memset
+const NK_MEMCPY = nk_memcopy
+const NK_SQRT = nk_sqrt
+const NK_SIN = nk_sin
+const NK_COS = nk_cos
+const NK_STRTOD = nk_strtod
+const NK_DTOA = nk_dtoa
+const NK_DEFAULT = -1
+
+# Skipping MacroDefinition: NK_VSNPRINTF ( s , n , f , a ) vsnprintf ( s , n , f , a )
+
+const NK_SCHAR_MIN = -127
+const NK_SCHAR_MAX = 127
+const NK_UCHAR_MIN = 0
+const NK_UCHAR_MAX = 256
+const NK_SSHORT_MIN = -32767
+const NK_SSHORT_MAX = 32767
+const NK_USHORT_MIN = 0
+const NK_USHORT_MAX = 65535
+const NK_SINT_MIN = -2147483647
+const NK_SINT_MAX = 2147483647
+const NK_UINT_MIN = 0
+const NK_UINT_MAX = UInt32(4294967295)
+const NK_FLOAT_PRECISION = 1.0e-14
+
+# Skipping MacroDefinition: nk_widget_state_reset ( s ) if ( ( * ( s ) ) & NK_WIDGET_STATE_MODIFIED ) ( * ( s ) ) = NK_WIDGET_STATE_INACTIVE | NK_WIDGET_STATE_MODIFIED ; else ( * ( s ) ) = NK_WIDGET_STATE_INACTIVE ;
+# Skipping MacroDefinition: nk_wsize sizeof ( nk_word )
+
+const nk_wmask = nk_wsize - 1
+
+# Skipping MacroDefinition: NK_TLOOP ( s ) if ( t ) NK_TLOOP1 ( s )
+# Skipping MacroDefinition: NK_TLOOP1 ( s ) do { s ; } while ( -- t )
+
+const NK_ADJACENCY_BONUS = 5
+const NK_SEPARATOR_BONUS = 10
+const NK_CAMEL_BONUS = 10
+const NK_LEADING_LETTER_PENALTY = -3
+const NK_MAX_LEADING_LETTER_PENALTY = -9
+const NK_UNMATCHED_LETTER_PENALTY = -1
+
+# Skipping MacroDefinition: NK_ROTL ( x , r ) ( ( x ) << ( r ) | ( ( x ) >> ( 32 - r ) ) )
+# Skipping MacroDefinition: NK_TO_HEX ( i ) ( ( i ) <= 9 ? '0' + ( i ) : 'A' - 10 + ( i ) )
+
+const NK_RP__MAXVAL = Float32(0x0fff)
+const NK_MAX_SORT_STACK = 64
+const NK_TT_MAX_OVERSAMPLE = 8
+const NK_TT__OVER_MASK = NK_TT_MAX_OVERSAMPLE - 1
+const NK_TT_MACSTYLE_DONTCARE = 0
+const NK_TT_MACSTYLE_BOLD = 1
+const NK_TT_MACSTYLE_ITALIC = 2
+const NK_TT_MACSTYLE_UNDERSCORE = 4
+const NK_TT_MACSTYLE_NONE = 8
+
+# Skipping MacroDefinition: nk_ttBYTE ( p ) ( * ( const nk_byte * ) ( p ) )
+# Skipping MacroDefinition: nk_ttCHAR ( p ) ( * ( const char * ) ( p ) )
+# Skipping MacroDefinition: nk_tt_tag4 ( p , c0 , c1 , c2 , c3 ) ( ( p ) [ 0 ] == ( c0 ) && ( p ) [ 1 ] == ( c1 ) && ( p ) [ 2 ] == ( c2 ) && ( p ) [ 3 ] == ( c3 ) )
+# Skipping MacroDefinition: nk_tt_tag ( p , str ) nk_tt_tag4 ( p , str [ 0 ] , str [ 1 ] , str [ 2 ] , str [ 3 ] )
+# Skipping MacroDefinition: NK_TT__COMPARE ( a , b ) ( ( a ) -> y0 < ( b ) -> y0 )
+
+const NK_CURSOR_DATA_W = 90
+const NK_CURSOR_DATA_H = 27
+
+# Skipping MacroDefinition: nk__in2 ( x ) ( ( i [ x ] << 8 ) + i [ ( x ) + 1 ] )
+# Skipping MacroDefinition: nk__in3 ( x ) ( ( i [ x ] << 16 ) + nk__in2 ( ( x ) + 1 ) )
+# Skipping MacroDefinition: nk__in4 ( x ) ( ( i [ x ] << 24 ) + nk__in3 ( ( x ) + 1 ) )
+# Skipping MacroDefinition: NK_COLOR_MAP ( NK_COLOR ) NK_COLOR ( NK_COLOR_TEXT , 175 , 175 , 175 , 255 ) NK_COLOR ( NK_COLOR_WINDOW , 45 , 45 , 45 , 255 ) NK_COLOR ( NK_COLOR_HEADER , 40 , 40 , 40 , 255 ) NK_COLOR ( NK_COLOR_BORDER , 65 , 65 , 65 , 255 ) NK_COLOR ( NK_COLOR_BUTTON , 50 , 50 , 50 , 255 ) NK_COLOR ( NK_COLOR_BUTTON_HOVER , 40 , 40 , 40 , 255 ) NK_COLOR ( NK_COLOR_BUTTON_ACTIVE , 35 , 35 , 35 , 255 ) NK_COLOR ( NK_COLOR_TOGGLE , 100 , 100 , 100 , 255 ) NK_COLOR ( NK_COLOR_TOGGLE_HOVER , 120 , 120 , 120 , 255 ) NK_COLOR ( NK_COLOR_TOGGLE_CURSOR , 45 , 45 , 45 , 255 ) NK_COLOR ( NK_COLOR_SELECT , 45 , 45 , 45 , 255 ) NK_COLOR ( NK_COLOR_SELECT_ACTIVE , 35 , 35 , 35 , 255 ) NK_COLOR ( NK_COLOR_SLIDER , 38 , 38 , 38 , 255 ) NK_COLOR ( NK_COLOR_SLIDER_CURSOR , 100 , 100 , 100 , 255 ) NK_COLOR ( NK_COLOR_SLIDER_CURSOR_HOVER , 120 , 120 , 120 , 255 ) NK_COLOR ( NK_COLOR_SLIDER_CURSOR_ACTIVE , 150 , 150 , 150 , 255 ) NK_COLOR ( NK_COLOR_PROPERTY , 38 , 38 , 38 , 255 ) NK_COLOR ( NK_COLOR_EDIT , 38 , 38 , 38 , 255 ) NK_COLOR ( NK_COLOR_EDIT_CURSOR , 175 , 175 , 175 , 255 ) NK_COLOR ( NK_COLOR_COMBO , 45 , 45 , 45 , 255 ) NK_COLOR ( NK_COLOR_CHART , 120 , 120 , 120 , 255 ) NK_COLOR ( NK_COLOR_CHART_COLOR , 45 , 45 , 45 , 255 ) NK_COLOR ( NK_COLOR_CHART_COLOR_HIGHLIGHT , 255 , 0 , 0 , 255 ) NK_COLOR ( NK_COLOR_SCROLLBAR , 40 , 40 , 40 , 255 ) NK_COLOR ( NK_COLOR_SCROLLBAR_CURSOR , 100 , 100 , 100 , 255 ) NK_COLOR ( NK_COLOR_SCROLLBAR_CURSOR_HOVER , 120 , 120 , 120 , 255 ) NK_COLOR ( NK_COLOR_SCROLLBAR_CURSOR_ACTIVE , 150 , 150 , 150 , 255 ) NK_COLOR ( NK_COLOR_TAB_HEADER , 40 , 40 , 40 , 255 )
+# Skipping MacroDefinition: NK_COLOR ( a , b , c , d , e ) { b , c , d , e } ,
+# Skipping MacroDefinition: NK_COLOR ( a , b , c , d , e ) # a ,
+# Skipping MacroDefinition: NK_STYLE_PUSH_IMPLEMENATION ( prefix , type , stack ) nk_style_push_ ## type ( struct nk_context * ctx , prefix ## _ ## type * address , prefix ## _ ## type value ) \
+#{ struct nk_config_stack_ ## type * type_stack ; struct nk_config_stack_ ## type ## _element * element ; NK_ASSERT ( ctx ) ; if ( ! ctx ) return 0 ; type_stack = & ctx -> stacks . stack ; NK_ASSERT ( type_stack -> head < ( int ) NK_LEN ( type_stack -> elements ) ) ; if ( type_stack -> head >= ( int ) NK_LEN ( type_stack -> elements ) ) return 0 ; element = & type_stack -> elements [ type_stack -> head ++ ] ; element -> address = address ; element -> old_value = * address ; * address = value ; return 1 ; \
+#}
+# Skipping MacroDefinition: NK_STYLE_POP_IMPLEMENATION ( type , stack ) nk_style_pop_ ## type ( struct nk_context * ctx ) \
+#{ struct nk_config_stack_ ## type * type_stack ; struct nk_config_stack_ ## type ## _element * element ; NK_ASSERT ( ctx ) ; if ( ! ctx ) return 0 ; type_stack = & ctx -> stacks . stack ; NK_ASSERT ( type_stack -> head > 0 ) ; if ( type_stack -> head < 1 ) return 0 ; element = & type_stack -> elements [ -- type_stack -> head ] ; * element -> address = element -> old_value ; return 1 ; \
+#}
+# Skipping MacroDefinition: NK_FRAC ( x ) ( x - ( int ) x )
+# Skipping MacroDefinition: NK_TEXT_HAS_SELECTION ( s ) ( ( s ) -> select_start != ( s ) -> select_end )
+
+const nk_char = Int8
+const nk_uchar = UInt8
+const nk_byte = UInt8
 const nk_short = Int16
 const nk_ushort = UInt16
-const nk_int = Cint
+const nk_int = Int32
 const nk_uint = UInt32
-const nk_size = UInt32
-const nk_ptr = UInt32
+const nk_size = Csize_t
+const nk_ptr = Csize_t
 const nk_hash = nk_uint
 const nk_flags = nk_uint
 const nk_rune = nk_uint
-const _dummy_array415 = NTuple{1, UInt8}
-const _dummy_array416 = NTuple{1, UInt8}
-const _dummy_array417 = NTuple{1, UInt8}
-const _dummy_array418 = NTuple{1, UInt8}
-const _dummy_array419 = NTuple{1, UInt8}
-const _dummy_array420 = NTuple{1, UInt8}
-const _dummy_array421 = NTuple{1, UInt8}
-const _dummy_array422 = NTuple{1, UInt8}
 const _dummy_array423 = NTuple{1, UInt8}
+const _dummy_array424 = NTuple{1, UInt8}
+const _dummy_array425 = NTuple{1, UInt8}
+const _dummy_array426 = NTuple{1, UInt8}
+const _dummy_array427 = NTuple{1, UInt8}
+const _dummy_array428 = NTuple{1, UInt8}
+const _dummy_array429 = NTuple{1, UInt8}
+const _dummy_array430 = NTuple{1, UInt8}
+const _dummy_array431 = NTuple{1, UInt8}
 
 mutable struct nk_buffer_marker
     active::Cint
@@ -158,7 +248,11 @@ mutable struct nk_command_buffer
     last::nk_size
 end
 
-const nk_draw_command = Cvoid
+mutable struct nk_draw_command
+    elem_count::UInt32
+    clip_rect::nk_rect
+    texture::nk_handle
+end
 
 @cenum(nk_anti_aliasing,
     NK_ANTI_ALIASING_OFF = 0,
@@ -175,7 +269,42 @@ mutable struct nk_draw_null_texture
     uv::nk_vec2
 end
 
-const nk_draw_vertex_layout_element = Cvoid
+@cenum(nk_draw_vertex_layout_attribute,
+    NK_VERTEX_POSITION = 0,
+    NK_VERTEX_COLOR = 1,
+    NK_VERTEX_TEXCOORD = 2,
+    NK_VERTEX_ATTRIBUTE_COUNT = 3,
+)
+@cenum(nk_draw_vertex_layout_format,
+    NK_FORMAT_SCHAR = 0,
+    NK_FORMAT_SSHORT = 1,
+    NK_FORMAT_SINT = 2,
+    NK_FORMAT_UCHAR = 3,
+    NK_FORMAT_USHORT = 4,
+    NK_FORMAT_UINT = 5,
+    NK_FORMAT_FLOAT = 6,
+    NK_FORMAT_DOUBLE = 7,
+    NK_FORMAT_COLOR_BEGIN = 8,
+    NK_FORMAT_R8G8B8 = 8,
+    NK_FORMAT_R16G15B16 = 9,
+    NK_FORMAT_R32G32B32 = 10,
+    NK_FORMAT_R8G8B8A8 = 11,
+    NK_FORMAT_B8G8R8A8 = 12,
+    NK_FORMAT_R16G15B16A16 = 13,
+    NK_FORMAT_R32G32B32A32 = 14,
+    NK_FORMAT_R32G32B32A32_FLOAT = 15,
+    NK_FORMAT_R32G32B32A32_DOUBLE = 16,
+    NK_FORMAT_RGB32 = 17,
+    NK_FORMAT_RGBA32 = 18,
+    NK_FORMAT_COLOR_END = 18,
+    NK_FORMAT_COUNT = 19,
+)
+
+mutable struct nk_draw_vertex_layout_element
+    attribute::nk_draw_vertex_layout_attribute
+    format::nk_draw_vertex_layout_format
+    offset::nk_size
+end
 
 mutable struct nk_convert_config
     global_alpha::Cfloat
@@ -262,13 +391,32 @@ mutable struct nk_text_edit
     undo::nk_text_undo_state
 end
 
-const nk_draw_list = Cvoid
+mutable struct nk_draw_list
+    clip_rect::nk_rect
+    circle_vtx::NTuple{12, nk_vec2}
+    config::nk_convert_config
+    buffer::Ptr{nk_buffer}
+    vertices::Ptr{nk_buffer}
+    elements::Ptr{nk_buffer}
+    element_count::UInt32
+    vertex_count::UInt32
+    cmd_count::UInt32
+    cmd_offset::nk_size
+    path_count::UInt32
+    path_offset::UInt32
+    line_AA::nk_anti_aliasing
+    shape_AA::nk_anti_aliasing
+end
+
 const nk_text_width_f = Ptr{Cvoid}
+const nk_query_font_glyph_f = Ptr{Cvoid}
 
 mutable struct nk_user_font
     userdata::nk_handle
     height::Cfloat
     width::nk_text_width_f
+    query::nk_query_font_glyph_f
+    texture::nk_handle
 end
 
 @cenum(nk_panel_type,
@@ -895,7 +1043,7 @@ mutable struct nk_popup_buffer
     active::Cint
 end
 
-mutable struct nk_popup_state{nk_window}
+mutable struct nk_popup_state
     win::Ptr{nk_window}
     type::nk_panel_type
     buf::nk_popup_buffer
@@ -952,6 +1100,7 @@ mutable struct nk_context
     button_behavior::nk_button_behavior
     stacks::nk_configuration_stacks
     delta_time_seconds::Cfloat
+    draw_list::nk_draw_list
     text_edit::nk_text_edit
     overlay::nk_command_buffer
     build::Cint
@@ -1227,8 +1376,95 @@ end
     NK_CURSOR_COUNT = 7,
 )
 
-const nk_user_font_glyph = Cvoid
-const nk_query_font_glyph_f = Ptr{Cvoid}
+mutable struct nk_user_font_glyph
+    uv::NTuple{2, nk_vec2}
+    offset::nk_vec2
+    width::Cfloat
+    height::Cfloat
+    xadvance::Cfloat
+end
+
+@cenum(nk_font_coord_type,
+    NK_COORD_UV = 0,
+    NK_COORD_PIXEL = 1,
+)
+
+mutable struct nk_baked_font
+    height::Cfloat
+    ascent::Cfloat
+    descent::Cfloat
+    glyph_offset::nk_rune
+    glyph_count::nk_rune
+    ranges::Ptr{nk_rune}
+end
+
+mutable struct nk_font_glyph
+    codepoint::nk_rune
+    xadvance::Cfloat
+    x0::Cfloat
+    y0::Cfloat
+    x1::Cfloat
+    y1::Cfloat
+    w::Cfloat
+    h::Cfloat
+    u0::Cfloat
+    v0::Cfloat
+    u1::Cfloat
+    v1::Cfloat
+end
+
+mutable struct nk_font_config
+    next::Ptr{nk_font_config}
+    ttf_blob::Ptr{Cvoid}
+    ttf_size::nk_size
+    ttf_data_owned_by_atlas::Cuchar
+    merge_mode::Cuchar
+    pixel_snap::Cuchar
+    oversample_v::Cuchar
+    oversample_h::Cuchar
+    padding::NTuple{3, Cuchar}
+    size::Cfloat
+    coord_type::nk_font_coord_type
+    spacing::nk_vec2
+    range::Ptr{nk_rune}
+    font::Ptr{nk_baked_font}
+    fallback_glyph::nk_rune
+    n::Ptr{nk_font_config}
+    p::Ptr{nk_font_config}
+end
+
+mutable struct nk_font
+    next::Ptr{nk_font}
+    handle::nk_user_font
+    info::nk_baked_font
+    scale::Cfloat
+    glyphs::Ptr{nk_font_glyph}
+    fallback::Ptr{nk_font_glyph}
+    fallback_codepoint::nk_rune
+    texture::nk_handle
+    config::Ptr{nk_font_config}
+end
+
+@cenum(nk_font_atlas_format,
+    NK_FONT_ATLAS_ALPHA8 = 0,
+    NK_FONT_ATLAS_RGBA32 = 1,
+)
+
+mutable struct nk_font_atlas
+    pixel::Ptr{Cvoid}
+    tex_width::Cint
+    tex_height::Cint
+    permanent::nk_allocator
+    temporary::nk_allocator
+    custom::nk_recti
+    cursors::NTuple{7, nk_cursor}
+    glyph_count::Cint
+    glyphs::Ptr{nk_font_glyph}
+    default_font::Ptr{nk_font}
+    fonts::Ptr{nk_font}
+    config::Ptr{nk_font_config}
+    font_num::Cint
+end
 
 mutable struct nk_memory_status
     memory::Ptr{Cvoid}
@@ -1430,6 +1666,13 @@ end
     NK_CLIPPING_OFF = 0,
     NK_CLIPPING_ON = 1,
 )
+
+const nk_draw_index = nk_ushort
+
+@cenum(nk_draw_list_stroke,
+    NK_STROKE_OPEN = 0,
+    NK_STROKE_CLOSED = 1,
+)
 @cenum(nk_panel_set,
     NK_PANEL_SET_NONBLOCK = 240,
     NK_PANEL_SET_POPUP = 244,
@@ -1445,3 +1688,252 @@ end
     NK_WINDOW_MINIMIZED = 32768,
     NK_WINDOW_REMOVE_ROM = 65536,
 )
+
+const _dummy_array5715 = NTuple{1, UInt8}
+const _dummy_array5716 = NTuple{1, UInt8}
+const _dummy_array5717 = NTuple{1, UInt8}
+const _dummy_array5718 = NTuple{1, UInt8}
+const _dummy_array5719 = NTuple{1, UInt8}
+const _dummy_array5720 = NTuple{1, UInt8}
+const _dummy_array5721 = NTuple{1, UInt8}
+const _dummy_array5722 = NTuple{1, UInt8}
+const _dummy_array5723 = NTuple{1, UInt8}
+
+@cenum(nk_window_insert_location,
+    NK_INSERT_BACK = 0,
+    NK_INSERT_FRONT = 1,
+)
+
+mutable struct nk_text
+    padding::nk_vec2
+    background::nk_color
+    text::nk_color
+end
+
+@cenum(nk_toggle_type,
+    NK_TOGGLE_CHECK = 0,
+    NK_TOGGLE_OPTION = 1,
+)
+@cenum(nk_property_status,
+    NK_PROPERTY_DEFAULT = 0,
+    NK_PROPERTY_EDIT = 1,
+    NK_PROPERTY_DRAG = 2,
+)
+@cenum(nk_property_filter,
+    NK_FILTER_INT = 0,
+    NK_FILTER_FLOAT = 1,
+)
+@cenum(nk_property_kind,
+    NK_PROPERTY_INT = 0,
+    NK_PROPERTY_FLOAT = 1,
+    NK_PROPERTY_DOUBLE = 2,
+)
+
+mutable struct nk_property
+    d::Cdouble
+end
+
+mutable struct nk_property_variant
+    kind::nk_property_kind
+    value::nk_property
+    min_value::nk_property
+    max_value::nk_property
+    step::nk_property
+end
+
+const nk_rp_coord = UInt16
+
+mutable struct nk_rp_rect
+    id::Cint
+    w::nk_rp_coord
+    h::nk_rp_coord
+    x::nk_rp_coord
+    y::nk_rp_coord
+    was_packed::Cint
+end
+
+mutable struct nk_rp_node
+    x::nk_rp_coord
+    y::nk_rp_coord
+    next::Ptr{nk_rp_node}
+end
+
+mutable struct nk_rp_context
+    width::Cint
+    height::Cint
+    align::Cint
+    init_mode::Cint
+    heuristic::Cint
+    num_nodes::Cint
+    active_head::Ptr{nk_rp_node}
+    free_head::Ptr{nk_rp_node}
+    extra::NTuple{2, nk_rp_node}
+end
+
+mutable struct nk_rp__findresult
+    x::Cint
+    y::Cint
+    prev_link::Ptr{Ptr{nk_rp_node}}
+end
+
+@cenum(NK_RP_HEURISTIC,
+    NK_RP_HEURISTIC_Skyline_default = 0,
+    NK_RP_HEURISTIC_Skyline_BL_sortHeight = 0,
+    NK_RP_HEURISTIC_Skyline_BF_sortHeight = 1,
+)
+@cenum(NK_RP_INIT_STATE,
+    NK_RP__INIT_skyline = 1,
+)
+
+mutable struct nk_tt_bakedchar
+    x0::UInt16
+    y0::UInt16
+    x1::UInt16
+    y1::UInt16
+    xoff::Cfloat
+    yoff::Cfloat
+    xadvance::Cfloat
+end
+
+mutable struct nk_tt_aligned_quad
+    x0::Cfloat
+    y0::Cfloat
+    s0::Cfloat
+    t0::Cfloat
+    x1::Cfloat
+    y1::Cfloat
+    s1::Cfloat
+    t1::Cfloat
+end
+
+mutable struct nk_tt_packedchar
+    x0::UInt16
+    y0::UInt16
+    x1::UInt16
+    y1::UInt16
+    xoff::Cfloat
+    yoff::Cfloat
+    xadvance::Cfloat
+    xoff2::Cfloat
+    yoff2::Cfloat
+end
+
+mutable struct nk_tt_pack_range
+    font_size::Cfloat
+    first_unicode_codepoint_in_range::Cint
+    array_of_unicode_codepoints::Ptr{Cint}
+    num_chars::Cint
+    chardata_for_range::Ptr{nk_tt_packedchar}
+    h_oversample::Cuchar
+    v_oversample::Cuchar
+end
+
+mutable struct nk_tt_pack_context
+    pack_info::Ptr{Cvoid}
+    width::Cint
+    height::Cint
+    stride_in_bytes::Cint
+    padding::Cint
+    h_oversample::UInt32
+    v_oversample::UInt32
+    pixels::Ptr{Cuchar}
+    nodes::Ptr{Cvoid}
+end
+
+mutable struct nk_tt_fontinfo
+    data::Ptr{Cuchar}
+    fontstart::Cint
+    numGlyphs::Cint
+    loca::Cint
+    head::Cint
+    glyf::Cint
+    hhea::Cint
+    hmtx::Cint
+    kern::Cint
+    index_map::Cint
+    indexToLocFormat::Cint
+end
+
+mutable struct nk_tt_vertex
+    x::Int16
+    y::Int16
+    cx::Int16
+    cy::Int16
+    type::Cuchar
+    padding::Cuchar
+end
+
+mutable struct nk_tt__bitmap
+    w::Cint
+    h::Cint
+    stride::Cint
+    pixels::Ptr{Cuchar}
+end
+
+mutable struct nk_tt__hheap_chunk
+    next::Ptr{nk_tt__hheap_chunk}
+end
+
+mutable struct nk_tt__hheap
+    alloc::nk_allocator
+    head::Ptr{nk_tt__hheap_chunk}
+    first_free::Ptr{Cvoid}
+    num_remaining_in_head_chunk::Cint
+end
+
+mutable struct nk_tt__edge
+    x0::Cfloat
+    y0::Cfloat
+    x1::Cfloat
+    y1::Cfloat
+    invert::Cint
+end
+
+mutable struct nk_tt__active_edge
+    next::Ptr{nk_tt__active_edge}
+    fx::Cfloat
+    fdx::Cfloat
+    fdy::Cfloat
+    direction::Cfloat
+    sy::Cfloat
+    ey::Cfloat
+end
+
+mutable struct nk_tt__point
+    x::Cfloat
+    y::Cfloat
+end
+
+mutable struct nk_font_bake_data
+    info::nk_tt_fontinfo
+    rects::Ptr{nk_rp_rect}
+    ranges::Ptr{nk_tt_pack_range}
+    range_count::nk_rune
+end
+
+mutable struct nk_font_baker
+    alloc::nk_allocator
+    spc::nk_tt_pack_context
+    build::Ptr{nk_font_bake_data}
+    packed_chars::Ptr{nk_tt_packedchar}
+    rects::Ptr{nk_rp_rect}
+    ranges::Ptr{nk_tt_pack_range}
+end
+
+mutable struct nk_text_find
+    x::Cfloat
+    y::Cfloat
+    height::Cfloat
+    first_char::Cint
+    length::Cint
+    prev_first::Cint
+end
+
+mutable struct nk_text_edit_row
+    x0::Cfloat
+    x1::Cfloat
+    baseline_y_delta::Cfloat
+    ymin::Cfloat
+    ymax::Cfloat
+    num_chars::Cint
+end
