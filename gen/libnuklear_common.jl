@@ -107,14 +107,10 @@ mutable struct nk_buffer_marker
 end
 
 mutable struct nk_handle
-    ptr::Ptr{Cvoid}
+    id::Cint
 end
 
-@cenum(nk_plugin_alloc,
-    NK_TREE_NODE = 0,
-    NK_TREE_TAB = 1,
-)
-
+const nk_plugin_alloc = Ptr{Cvoid}
 const nk_plugin_free = Ptr{Cvoid}
 
 mutable struct nk_allocator
@@ -199,6 +195,17 @@ end
     NK_STYLE_ITEM_IMAGE = 1,
 )
 
+mutable struct nk_image
+    handle::nk_handle
+    w::UInt16
+    h::UInt16
+    region::NTuple{4, UInt16}
+end
+
+mutable struct nk_style_item_data
+    image::nk_image
+end
+
 mutable struct nk_style_item
     type::nk_style_item_type
     data::nk_style_item_data
@@ -256,7 +263,7 @@ mutable struct nk_text_edit
 end
 
 const nk_draw_list = Cvoid
-const nk_text_width_f = Cvoid
+const nk_text_width_f = Ptr{Cvoid}
 
 mutable struct nk_user_font
     userdata::nk_handle
@@ -403,13 +410,6 @@ end
 mutable struct nk_input
     keyboard::nk_keyboard
     mouse::nk_mouse
-end
-
-mutable struct nk_image
-    handle::nk_handle
-    w::UInt16
-    h::UInt16
-    region::NTuple{4, UInt16}
 end
 
 mutable struct nk_cursor
@@ -837,6 +837,19 @@ mutable struct nk_configuration_stacks
     button_behaviors::nk_config_stack_button_behavior
 end
 
+mutable struct nk_table
+    seq::UInt32
+    size::UInt32
+    keys::NTuple{51, nk_hash}
+    values::NTuple{51, nk_uint}
+    next::Ptr{nk_table}
+    prev::Ptr{nk_table}
+end
+
+mutable struct nk_page_data
+    tbl::nk_table
+end
+
 mutable struct nk_page_element
     data::nk_page_data
     next::Ptr{nk_page_element}
@@ -882,7 +895,7 @@ mutable struct nk_popup_buffer
     active::Cint
 end
 
-mutable struct nk_popup_state
+mutable struct nk_popup_state{nk_window}
     win::Ptr{nk_window}
     type::nk_panel_type
     buf::nk_popup_buffer
@@ -907,15 +920,6 @@ mutable struct nk_edit_state
     scrollbar::nk_scroll
     mode::Cuchar
     single_line::Cuchar
-end
-
-mutable struct nk_table
-    seq::UInt32
-    size::UInt32
-    keys::NTuple{51, nk_hash}
-    values::NTuple{51, nk_uint}
-    next::Ptr{nk_table}
-    prev::Ptr{nk_table}
 end
 
 mutable struct nk_window
@@ -976,16 +980,14 @@ mutable struct nk_vec2i
     y::Int16
 end
 
-mutable struct nk_glyph
+mutable struct nk_recti
     x::Int16
     y::Int16
     w::Int16
     h::Int16
 end
 
-mutable struct nk_handle
-    _nk_handle::Cint
-end
+const nk_glyph = NTuple{4, UInt8}
 
 @cenum(nk_heading,
     NK_UP = 0,
@@ -1024,6 +1026,10 @@ end
 @cenum(nk_layout_format,
     NK_DYNAMIC = 0,
     NK_STATIC = 1,
+)
+@cenum(nk_tree_type,
+    NK_TREE_NODE = 0,
+    NK_TREE_TAB = 1,
 )
 @cenum(nk_keys,
     NK_KEY_NONE = 0,
@@ -1221,6 +1227,7 @@ end
     NK_CURSOR_COUNT = 7,
 )
 
+const nk_user_font_glyph = Cvoid
 const nk_query_font_glyph_f = Ptr{Cvoid}
 
 mutable struct nk_memory_status
@@ -1423,11 +1430,6 @@ end
     NK_CLIPPING_OFF = 0,
     NK_CLIPPING_ON = 1,
 )
-
-mutable struct nk_style_item_data
-    _nk_style_item_data::nk_image
-end
-
 @cenum(nk_panel_set,
     NK_PANEL_SET_NONBLOCK = 240,
     NK_PANEL_SET_POPUP = 244,
@@ -1443,7 +1445,3 @@ end
     NK_WINDOW_MINIMIZED = 32768,
     NK_WINDOW_REMOVE_ROM = 65536,
 )
-
-mutable struct nk_page_data
-    _nk_page_data::nk_table
-end
