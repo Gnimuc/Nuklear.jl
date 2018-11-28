@@ -21,14 +21,15 @@ const NK_SCROLLBAR_HIDING_TIMEOUT = Float32(4.0)
 # Skipping MacroDefinition: NK_MAX ( a , b ) ( ( a ) < ( b ) ? ( b ) : ( a ) )
 # Skipping MacroDefinition: NK_CLAMP ( i , v , x ) ( NK_MAX ( NK_MIN ( v , x ) , i ) )
 
-const NK_INT8 = int8_t
-const NK_UINT8 = uint8_t
-const NK_INT16 = int16_t
-const NK_UINT16 = uint16_t
-const NK_INT32 = int32_t
-const NK_UINT32 = uint32_t
-const NK_SIZE_TYPE = uintptr_t
-const NK_POINTER_TYPE = uintptr_t
+# TODO: fix Clang.jl
+const NK_INT8 = Int8
+const NK_UINT8 = UInt8
+const NK_INT16 = Int16
+const NK_UINT16 = UInt16
+const NK_INT32 = Int32
+const NK_UINT32 = UInt32
+const NK_SIZE_TYPE = Csize_t
+const NK_POINTER_TYPE = Csize_t
 
 # Skipping MacroDefinition: nk_foreach ( c , ctx ) for ( ( c ) = nk__begin ( ctx ) ; ( c ) != 0 ; ( c ) = nk__next ( ctx , c ) )
 # Skipping MacroDefinition: nk_draw_foreach ( cmd , ctx , b ) for ( ( cmd ) = nk__draw_begin ( ctx , b ) ; ( cmd ) != 0 ; ( cmd ) = nk__draw_next ( cmd , b , ctx ) )
@@ -92,13 +93,13 @@ const NK_BUFFER_DEFAULT_INITIAL_SIZE = 4 * 1024
 
 # Skipping MacroDefinition: NK_ASSERT ( expr ) assert ( expr )
 
-const NK_MEMSET = nk_memset
-const NK_MEMCPY = nk_memcopy
-const NK_SQRT = nk_sqrt
-const NK_SIN = nk_sin
-const NK_COS = nk_cos
-const NK_STRTOD = nk_strtod
-const NK_DTOA = nk_dtoa
+# const NK_MEMSET = nk_memset
+# const NK_MEMCPY = nk_memcopy
+# const NK_SQRT = nk_sqrt
+# const NK_SIN = nk_sin
+# const NK_COS = nk_cos
+# const NK_STRTOD = nk_strtod
+# const NK_DTOA = nk_dtoa
 const NK_DEFAULT = -1
 
 # Skipping MacroDefinition: NK_VSNPRINTF ( s , n , f , a ) vsnprintf ( s , n , f , a )
@@ -120,7 +121,7 @@ const NK_FLOAT_PRECISION = 1.0e-14
 # Skipping MacroDefinition: nk_widget_state_reset ( s ) if ( ( * ( s ) ) & NK_WIDGET_STATE_MODIFIED ) ( * ( s ) ) = NK_WIDGET_STATE_INACTIVE | NK_WIDGET_STATE_MODIFIED ; else ( * ( s ) ) = NK_WIDGET_STATE_INACTIVE ;
 # Skipping MacroDefinition: nk_wsize sizeof ( nk_word )
 
-const nk_wmask = nk_wsize - 1
+const nk_wmask = sizeof(Cint) - 1
 
 # Skipping MacroDefinition: NK_TLOOP ( s ) if ( t ) NK_TLOOP1 ( s )
 # Skipping MacroDefinition: NK_TLOOP1 ( s ) do { s ; } while ( -- t )
@@ -1043,7 +1044,7 @@ mutable struct nk_popup_buffer
     active::Cint
 end
 
-mutable struct nk_popup_state
+mutable struct nk_popup_state{nk_window}
     win::Ptr{nk_window}
     type::nk_panel_type
     buf::nk_popup_buffer
