@@ -21,9 +21,14 @@ export Ctm, Ctime_t, Cclock_t
 
 include(joinpath(@__DIR__, "..", "gen", "libnuklear_common.jl"))
 include(joinpath(@__DIR__, "..", "gen", "libnuklear_api.jl"))
+include(joinpath(@__DIR__, "..", "gen", "helper_api.jl"))
+
+const nk_false = 0
+const nk_true = 1
+export nk_false, nk_true
 
 foreach(names(@__MODULE__, all=true)) do s
-    if startswith(string(s), "nk_")
+    if startswith(string(s), "nk_") || startswith(string(s), "NK_")
         @eval export $s
     end
 end

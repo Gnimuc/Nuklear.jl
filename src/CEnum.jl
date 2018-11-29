@@ -3,7 +3,13 @@ module CEnum
 abstract type Cenum{T} end
 
 Base.:|(a::T, b::T) where {T<:Cenum{UInt32}} = UInt32(a) | UInt32(b)
+Base.:|(a::T, b::UInt32) where {T<:Cenum{UInt32}} = UInt32(a) | b
+Base.:|(a::UInt32, b::T) where {T<:Cenum{UInt32}} = b | a
+
 Base.:&(a::T, b::T) where {T<:Cenum{UInt32}} = UInt32(a) & UInt32(b)
+Base.:&(a::T, b::UInt32) where {T<:Cenum{UInt32}} = UInt32(a) & b
+Base.:&(a::UInt32, b::T) where {T<:Cenum{UInt32}} = b & a
+
 Base.:(==)(a::Integer, b::Cenum{T}) where {T<:Integer} = a == T(b)
 Base.:(==)(a::Cenum, b::Integer) = b == a
 
@@ -41,7 +47,7 @@ function enum_name(x::T) where {T<:Cenum}
     if index != 0
         return enum_names(T)[index]
     end
-    error("Invalid enum: $(Int(x)), name not found")
+    @error "Invalid enum: $(Int(x)), name not found"
 end
 
 Base.show(io::IO, x::Cenum) = print(io, enum_name(x), "($(Int(x)))")
