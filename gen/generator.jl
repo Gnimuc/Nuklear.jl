@@ -2,7 +2,6 @@ using Clang
 
 # don't forgot to add these flags in the front of the header, the most easy way is to
 # do a manually copy-paste:
-# define NK_IMPLEMENTATION
 # define NK_INCLUDE_FIXED_TYPES
 # define NK_INCLUDE_DEFAULT_ALLOCATOR
 # define NK_INCLUDE_STANDARD_IO
@@ -20,7 +19,7 @@ parse_headers!(ctx, [NUKLEAR_H], includes=[LLVM_INCLUDE])
 # settings
 ctx.libname = "libnuklear"
 ctx.options["is_function_strictly_typed"] = false
-ctx.options["is_struct_mutable"] = true
+ctx.options["is_struct_mutable"] = false  # for nested struct 
 
 # write output
 api_file = joinpath(@__DIR__, "libnuklear_api.jl")

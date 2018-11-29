@@ -16,8 +16,8 @@ end
 include("CEnum.jl")
 using .CEnum
 
-# include("ctypes.jl")
-# export Ctm, Ctime_t, Cclock_t
+include("ctypes.jl")
+export Ctm, Ctime_t, Cclock_t
 
 include(joinpath(@__DIR__, "..", "gen", "libnuklear_common.jl"))
 include(joinpath(@__DIR__, "..", "gen", "libnuklear_api.jl"))
