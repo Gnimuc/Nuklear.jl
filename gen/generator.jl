@@ -8,7 +8,8 @@ using Clang
 # define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 # define NK_INCLUDE_FONT_BAKING
 # define NK_INCLUDE_DEFAULT_FONT
-const NUKLEAR_H = joinpath(@__DIR__, "..", "deps", "usr", "include", "helper.h") |> normpath
+const NUKLEAR_H = joinpath(@__DIR__, "..", "deps", "usr", "include", "nuklear.h") |> normpath
+# const HELPER_H = joinpath(@__DIR__, "..", "deps", "usr", "include", "helper.h") |> normpath
 
 # create a work context
 ctx = DefaultContext()
@@ -22,7 +23,7 @@ ctx.options["is_function_strictly_typed"] = false
 ctx.options["is_struct_mutable"] = false  # for nested struct
 
 # write output
-api_file = joinpath(@__DIR__, "helper_api.jl")
+api_file = joinpath(@__DIR__, "libnuklear_api.jl")
 api_stream = open(api_file, "w")
 
 for trans_unit in ctx.trans_units
@@ -51,12 +52,12 @@ for trans_unit in ctx.trans_units
 end
 close(api_stream)
 
-# write "common" definitions: types, typealiases, etc.
-# common_file = joinpath(@__DIR__, "libnuklear_common.jl")
-# open(common_file, "w") do f
-#     println(f, "# Automatically generated using Clang.jl\n")
-#     print_buffer(f, dump_to_buffer(ctx.common_buffer))
-# end
+write "common" definitions: types, typealiases, etc.
+common_file = joinpath(@__DIR__, "libnuklear_common.jl")
+open(common_file, "w") do f
+    println(f, "# Automatically generated using Clang.jl\n")
+    print_buffer(f, dump_to_buffer(ctx.common_buffer))
+end
 
 # uncomment the following code to generate dependency and template files
 # copydeps(dirname(api_file))
