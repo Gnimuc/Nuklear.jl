@@ -108,39 +108,35 @@ const _dummy_array428 = NTuple{1, UInt8}
 const _dummy_array429 = NTuple{1, UInt8}
 const _dummy_array430 = NTuple{1, UInt8}
 
-mutable struct nk_buffer_marker
+struct nk_buffer_marker
     active::Cint
     offset::nk_size
 end
-nk_buffer_marker() = nk_buffer_marker(0, 0)
 
-mutable struct nk_handle
-    ptr::Cint
+struct nk_handle
+    id::Cint
 end
-nk_handle() = nk_handle(0)
 
-const nk_plugin_alloc = Function
-const nk_plugin_free = Function
+const nk_plugin_alloc = Ptr{Cvoid}
+const nk_plugin_free = Ptr{Cvoid}
 
-mutable struct nk_allocator
+struct nk_allocator
     userdata::nk_handle
     alloc::nk_plugin_alloc
     free::nk_plugin_free
 end
-nk_allocator() = nk_allocator(nk_handle(), Base.Libc.malloc, Base.Libc.free)
 
 @cenum(nk_allocation_type,
     NK_BUFFER_FIXED = 0,
     NK_BUFFER_DYNAMIC = 1,
 )
 
-mutable struct nk_memory
+struct nk_memory
     ptr::Ptr{Cvoid}
     size::nk_size
 end
-nk_memory() = nk_memory(C_NULL, 0)
 
-mutable struct nk_buffer
+struct nk_buffer
     marker::NTuple{2, nk_buffer_marker}
     pool::nk_allocator
     type::nk_allocation_type
@@ -151,19 +147,15 @@ mutable struct nk_buffer
     calls::nk_size
     size::nk_size
 end
-nk_buffer() = nk_buffer((nk_buffer_marker(),nk_buffer_marker()), nk_allocator(),
-                        NK_BUFFER_FIXED, nk_memory(), 0, 0, 0, 0, 0)
 
-
-
-mutable struct nk_rect
+struct nk_rect
     x::Cfloat
     y::Cfloat
     w::Cfloat
     h::Cfloat
 end
 
-mutable struct nk_command_buffer
+struct nk_command_buffer
     base::Ptr{nk_buffer}
     clip::nk_rect
     use_clipping::Cint
@@ -173,7 +165,7 @@ mutable struct nk_command_buffer
     last::nk_size
 end
 
-mutable struct nk_draw_command
+struct nk_draw_command
     elem_count::UInt32
     clip_rect::nk_rect
     texture::nk_handle
@@ -184,12 +176,12 @@ end
     NK_ANTI_ALIASING_ON = 1,
 )
 
-mutable struct nk_vec2
+struct nk_vec2
     x::Cfloat
     y::Cfloat
 end
 
-mutable struct nk_draw_null_texture
+struct nk_draw_null_texture
     texture::nk_handle
     uv::nk_vec2
 end
@@ -225,13 +217,13 @@ end
     NK_FORMAT_COUNT = 19,
 )
 
-mutable struct nk_draw_vertex_layout_element
+struct nk_draw_vertex_layout_element
     attribute::nk_draw_vertex_layout_attribute
     format::nk_draw_vertex_layout_format
     offset::nk_size
 end
 
-mutable struct nk_convert_config
+struct nk_convert_config
     global_alpha::Cfloat
     line_AA::nk_anti_aliasing
     shape_AA::nk_anti_aliasing
@@ -249,25 +241,18 @@ end
     NK_STYLE_ITEM_IMAGE = 1,
 )
 
-mutable struct nk_image
+struct nk_image
     handle::nk_handle
     w::UInt16
     h::UInt16
     region::NTuple{4, UInt16}
 end
 
-mutable struct nk_color
-    r::nk_byte
-    g::nk_byte
-    b::nk_byte
-    a::nk_byte
+struct nk_style_item_data
+    image::nk_image
 end
 
-mutable struct nk_style_item_data
-    color::nk_color
-end
-
-mutable struct nk_style_item
+struct nk_style_item
     type::nk_style_item_type
     data::nk_style_item_data
 end
@@ -275,27 +260,27 @@ end
 const nk_plugin_paste = Ptr{Cvoid}
 const nk_plugin_copy = Ptr{Cvoid}
 
-mutable struct nk_clipboard
+struct nk_clipboard
     userdata::nk_handle
     paste::nk_plugin_paste
     copy::nk_plugin_copy
 end
 
-mutable struct nk_str
+struct nk_str
     buffer::nk_buffer
     len::Cint
 end
 
 const nk_plugin_filter = Ptr{Cvoid}
 
-mutable struct nk_text_undo_record
+struct nk_text_undo_record
     where::Cint
     insert_length::Int16
     delete_length::Int16
     char_storage::Int16
 end
 
-mutable struct nk_text_undo_state
+struct nk_text_undo_state
     undo_rec::NTuple{99, nk_text_undo_record}
     undo_char::NTuple{999, nk_rune}
     undo_point::Int16
@@ -304,7 +289,7 @@ mutable struct nk_text_undo_state
     redo_char_point::Int16
 end
 
-mutable struct nk_text_edit
+struct nk_text_edit
     clip::nk_clipboard
     string::nk_str
     filter::nk_plugin_filter
@@ -323,7 +308,7 @@ mutable struct nk_text_edit
     undo::nk_text_undo_state
 end
 
-mutable struct nk_draw_list
+struct nk_draw_list
     clip_rect::nk_rect
     circle_vtx::NTuple{12, nk_vec2}
     config::nk_convert_config
@@ -343,7 +328,7 @@ end
 const nk_text_width_f = Ptr{Cvoid}
 const nk_query_font_glyph_f = Ptr{Cvoid}
 
-mutable struct nk_user_font
+struct nk_user_font
     userdata::nk_handle
     height::Cfloat
     width::nk_text_width_f
@@ -362,12 +347,12 @@ end
     NK_PANEL_TOOLTIP = 128,
 )
 
-mutable struct nk_scroll
+struct nk_scroll
     x::nk_uint
     y::nk_uint
 end
 
-mutable struct nk_menu_state
+struct nk_menu_state
     x::Cfloat
     y::Cfloat
     w::Cfloat
@@ -388,7 +373,7 @@ end
     NK_LAYOUT_COUNT = 9,
 )
 
-mutable struct nk_row_layout
+struct nk_row_layout
     type::nk_panel_row_layout_type
     index::Cint
     height::Cfloat
@@ -410,14 +395,14 @@ end
     NK_CHART_MAX = 2,
 )
 
-# mutable struct nk_color
-#     r::nk_byte
-#     g::nk_byte
-#     b::nk_byte
-#     a::nk_byte
-# end
+struct nk_color
+    r::nk_byte
+    g::nk_byte
+    b::nk_byte
+    a::nk_byte
+end
 
-mutable struct nk_chart_slot
+struct nk_chart_slot
     type::nk_chart_type
     color::nk_color
     highlight::nk_color
@@ -429,7 +414,7 @@ mutable struct nk_chart_slot
     index::Cint
 end
 
-mutable struct nk_chart
+struct nk_chart
     slot::Cint
     x::Cfloat
     y::Cfloat
@@ -438,7 +423,7 @@ mutable struct nk_chart
     slots::NTuple{4, nk_chart_slot}
 end
 
-mutable struct nk_panel
+struct nk_panel
     type::nk_panel_type
     flags::nk_flags
     bounds::nk_rect
@@ -459,24 +444,24 @@ mutable struct nk_panel
     parent::Ptr{nk_panel}
 end
 
-mutable struct nk_key
+struct nk_key
     down::Cint
     clicked::UInt32
 end
 
-mutable struct nk_keyboard
+struct nk_keyboard
     keys::NTuple{30, nk_key}
     text::NTuple{16, UInt8}
     text_len::Cint
 end
 
-mutable struct nk_mouse_button
+struct nk_mouse_button
     down::Cint
     clicked::UInt32
     clicked_pos::nk_vec2
 end
 
-mutable struct nk_mouse
+struct nk_mouse
     buttons::NTuple{4, nk_mouse_button}
     pos::nk_vec2
     prev::nk_vec2
@@ -487,23 +472,23 @@ mutable struct nk_mouse
     ungrab::Cuchar
 end
 
-mutable struct nk_input
+struct nk_input
     keyboard::nk_keyboard
     mouse::nk_mouse
 end
 
-mutable struct nk_cursor
+struct nk_cursor
     img::nk_image
     size::nk_vec2
     offset::nk_vec2
 end
 
-mutable struct nk_style_text
+struct nk_style_text
     color::nk_color
     padding::nk_vec2
 end
 
-mutable struct nk_style_button
+struct nk_style_button
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -523,7 +508,7 @@ mutable struct nk_style_button
     draw_end::Ptr{Cvoid}
 end
 
-mutable struct nk_style_toggle
+struct nk_style_toggle
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -544,7 +529,7 @@ mutable struct nk_style_toggle
     draw_end::Ptr{Cvoid}
 end
 
-mutable struct nk_style_selectable
+struct nk_style_selectable
     normal::nk_style_item
     hover::nk_style_item
     pressed::nk_style_item
@@ -585,7 +570,7 @@ end
     NK_SYMBOL_MAX = 13,
 )
 
-mutable struct nk_style_slider
+struct nk_style_slider
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -613,7 +598,7 @@ mutable struct nk_style_slider
     draw_end::Ptr{Cvoid}
 end
 
-mutable struct nk_style_progress
+struct nk_style_progress
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -632,7 +617,7 @@ mutable struct nk_style_progress
     draw_end::Ptr{Cvoid}
 end
 
-mutable struct nk_style_scrollbar
+struct nk_style_scrollbar
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -656,7 +641,7 @@ mutable struct nk_style_scrollbar
     draw_end::Ptr{Cvoid}
 end
 
-mutable struct nk_style_edit
+struct nk_style_edit
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -681,7 +666,7 @@ mutable struct nk_style_edit
     row_padding::Cfloat
 end
 
-mutable struct nk_style_property
+struct nk_style_property
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -702,7 +687,7 @@ mutable struct nk_style_property
     draw_end::Ptr{Cvoid}
 end
 
-mutable struct nk_style_chart
+struct nk_style_chart
     background::nk_style_item
     border_color::nk_color
     selected_color::nk_color
@@ -712,7 +697,7 @@ mutable struct nk_style_chart
     padding::nk_vec2
 end
 
-mutable struct nk_style_tab
+struct nk_style_tab
     background::nk_style_item
     border_color::nk_color
     text::nk_color
@@ -729,7 +714,7 @@ mutable struct nk_style_tab
     spacing::nk_vec2
 end
 
-mutable struct nk_style_combo
+struct nk_style_combo
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -756,7 +741,7 @@ end
     NK_HEADER_RIGHT = 1,
 )
 
-mutable struct nk_style_window_header
+struct nk_style_window_header
     normal::nk_style_item
     hover::nk_style_item
     active::nk_style_item
@@ -774,7 +759,7 @@ mutable struct nk_style_window_header
     spacing::nk_vec2
 end
 
-mutable struct nk_style_window
+struct nk_style_window
     header::nk_style_window_header
     fixed_background::nk_style_item
     background::nk_color
@@ -807,7 +792,7 @@ mutable struct nk_style_window
     tooltip_padding::nk_vec2
 end
 
-mutable struct nk_style
+struct nk_style
     font::Ptr{nk_user_font}
     cursors::NTuple{7, Ptr{nk_cursor}}
     cursor_active::Ptr{nk_cursor}
@@ -837,77 +822,77 @@ end
     NK_BUTTON_REPEATER = 1,
 )
 
-mutable struct nk_config_stack_style_item_element
+struct nk_config_stack_style_item_element
     address::Ptr{nk_style_item}
     old_value::nk_style_item
 end
 
-mutable struct nk_config_stack_style_item
+struct nk_config_stack_style_item
     head::Cint
     elements::NTuple{16, nk_config_stack_style_item_element}
 end
 
-mutable struct nk_config_stack_float_element
+struct nk_config_stack_float_element
     address::Ptr{Cfloat}
     old_value::Cfloat
 end
 
-mutable struct nk_config_stack_float
+struct nk_config_stack_float
     head::Cint
     elements::NTuple{32, nk_config_stack_float_element}
 end
 
-mutable struct nk_config_stack_vec2_element
+struct nk_config_stack_vec2_element
     address::Ptr{nk_vec2}
     old_value::nk_vec2
 end
 
-mutable struct nk_config_stack_vec2
+struct nk_config_stack_vec2
     head::Cint
     elements::NTuple{16, nk_config_stack_vec2_element}
 end
 
-mutable struct nk_config_stack_flags_element
+struct nk_config_stack_flags_element
     address::Ptr{nk_flags}
     old_value::nk_flags
 end
 
-mutable struct nk_config_stack_flags
+struct nk_config_stack_flags
     head::Cint
     elements::NTuple{32, nk_config_stack_flags_element}
 end
 
-mutable struct nk_config_stack_color_element
+struct nk_config_stack_color_element
     address::Ptr{nk_color}
     old_value::nk_color
 end
 
-mutable struct nk_config_stack_color
+struct nk_config_stack_color
     head::Cint
     elements::NTuple{32, nk_config_stack_color_element}
 end
 
-mutable struct nk_config_stack_user_font_element
+struct nk_config_stack_user_font_element
     address::Ptr{Ptr{nk_user_font}}
     old_value::Ptr{nk_user_font}
 end
 
-mutable struct nk_config_stack_user_font
+struct nk_config_stack_user_font
     head::Cint
     elements::NTuple{8, nk_config_stack_user_font_element}
 end
 
-mutable struct nk_config_stack_button_behavior_element
+struct nk_config_stack_button_behavior_element
     address::Ptr{nk_button_behavior}
     old_value::nk_button_behavior
 end
 
-mutable struct nk_config_stack_button_behavior
+struct nk_config_stack_button_behavior
     head::Cint
     elements::NTuple{8, nk_config_stack_button_behavior_element}
 end
 
-mutable struct nk_configuration_stacks
+struct nk_configuration_stacks
     style_items::nk_config_stack_style_item
     floats::nk_config_stack_float
     vectors::nk_config_stack_vec2
@@ -917,7 +902,7 @@ mutable struct nk_configuration_stacks
     button_behaviors::nk_config_stack_button_behavior
 end
 
-mutable struct nk_table
+struct nk_table
     seq::UInt32
     size::UInt32
     keys::NTuple{51, nk_hash}
@@ -926,23 +911,23 @@ mutable struct nk_table
     prev::Ptr{nk_table}
 end
 
-mutable struct nk_page_data
+struct nk_page_data
     tbl::nk_table
 end
 
-mutable struct nk_page_element
+struct nk_page_element
     data::nk_page_data
     next::Ptr{nk_page_element}
     prev::Ptr{nk_page_element}
 end
 
-mutable struct nk_page
+struct nk_page
     size::UInt32
     next::Ptr{nk_page}
     win::NTuple{1, nk_page_element}
 end
 
-mutable struct nk_pool
+struct nk_pool
     alloc::nk_allocator
     type::nk_allocation_type
     page_count::UInt32
@@ -953,7 +938,7 @@ mutable struct nk_pool
     cap::nk_size
 end
 
-mutable struct nk_property_state
+struct nk_property_state
     active::Cint
     prev::Cint
     buffer::NTuple{64, UInt8}
@@ -967,7 +952,7 @@ mutable struct nk_property_state
     state::Cint
 end
 
-mutable struct nk_popup_buffer
+struct nk_popup_buffer
     _begin::nk_size
     parent::nk_size
     last::nk_size
@@ -975,7 +960,7 @@ mutable struct nk_popup_buffer
     active::Cint
 end
 
-mutable struct nk_popup_state{nk_window}
+struct nk_popup_state{nk_window}
     win::Ptr{nk_window}
     type::nk_panel_type
     buf::nk_popup_buffer
@@ -988,7 +973,7 @@ mutable struct nk_popup_state{nk_window}
     header::nk_rect
 end
 
-mutable struct nk_edit_state
+struct nk_edit_state
     name::nk_hash
     seq::UInt32
     old::UInt32
@@ -1002,7 +987,7 @@ mutable struct nk_edit_state
     single_line::Cuchar
 end
 
-mutable struct nk_window
+struct nk_window
     seq::UInt32
     name::nk_hash
     name_string::NTuple{64, UInt8}
@@ -1023,7 +1008,7 @@ mutable struct nk_window
     parent::Ptr{nk_window}
 end
 
-mutable struct nk_context
+struct nk_context
     input::nk_input
     style::nk_style
     memory::nk_buffer
@@ -1049,19 +1034,19 @@ end
 
 const nk_style_slide = Cvoid
 
-mutable struct nk_colorf
+struct nk_colorf
     r::Cfloat
     g::Cfloat
     b::Cfloat
     a::Cfloat
 end
 
-mutable struct nk_vec2i
+struct nk_vec2i
     x::Int16
     y::Int16
 end
 
-mutable struct nk_recti
+struct nk_recti
     x::Int16
     y::Int16
     w::Int16
@@ -1181,7 +1166,7 @@ const nk_glyph = NTuple{4, UInt8}
     NK_COMMAND_CUSTOM = 18,
 )
 
-mutable struct nk_command
+struct nk_command
     type::nk_command_type
     next::nk_size
 end
@@ -1200,7 +1185,7 @@ end
     NK_WINDOW_NO_INPUT = 1024,
 )
 
-mutable struct nk_list_view
+struct nk_list_view
     _begin::Cint
     _end::Cint
     count::Cint
@@ -1308,7 +1293,7 @@ end
     NK_CURSOR_COUNT = 7,
 )
 
-mutable struct nk_user_font_glyph
+struct nk_user_font_glyph
     uv::NTuple{2, nk_vec2}
     offset::nk_vec2
     width::Cfloat
@@ -1321,7 +1306,7 @@ end
     NK_COORD_PIXEL = 1,
 )
 
-mutable struct nk_baked_font
+struct nk_baked_font
     height::Cfloat
     ascent::Cfloat
     descent::Cfloat
@@ -1330,7 +1315,7 @@ mutable struct nk_baked_font
     ranges::Ptr{nk_rune}
 end
 
-mutable struct nk_font_glyph
+struct nk_font_glyph
     codepoint::nk_rune
     xadvance::Cfloat
     x0::Cfloat
@@ -1345,7 +1330,7 @@ mutable struct nk_font_glyph
     v1::Cfloat
 end
 
-mutable struct nk_font_config
+struct nk_font_config
     next::Ptr{nk_font_config}
     ttf_blob::Ptr{Cvoid}
     ttf_size::nk_size
@@ -1365,13 +1350,8 @@ mutable struct nk_font_config
     p::Ptr{nk_font_config}
 end
 
-<<<<<<< HEAD
-mutable struct nk_font
-    next::Ptr{nk_font}
-=======
 struct nk_font
-    next::Ptr{Cvoid}
->>>>>>> d886dff... It's working.
+    next::Ptr{nk_font}
     handle::nk_user_font
     info::nk_baked_font
     scale::Cfloat
@@ -1427,7 +1407,7 @@ end
     NK_TEXT_EDIT_MODE_REPLACE = 2,
 )
 
-mutable struct nk_command_scissor
+struct nk_command_scissor
     header::nk_command
     x::Int16
     y::Int16
@@ -1435,7 +1415,7 @@ mutable struct nk_command_scissor
     h::UInt16
 end
 
-mutable struct nk_command_line
+struct nk_command_line
     header::nk_command
     line_thickness::UInt16
     _begin::nk_vec2i
@@ -1443,7 +1423,7 @@ mutable struct nk_command_line
     color::nk_color
 end
 
-mutable struct nk_command_curve
+struct nk_command_curve
     header::nk_command
     line_thickness::UInt16
     _begin::nk_vec2i
@@ -1452,7 +1432,7 @@ mutable struct nk_command_curve
     color::nk_color
 end
 
-mutable struct nk_command_rect
+struct nk_command_rect
     header::nk_command
     rounding::UInt16
     line_thickness::UInt16
@@ -1463,7 +1443,7 @@ mutable struct nk_command_rect
     color::nk_color
 end
 
-mutable struct nk_command_rect_filled
+struct nk_command_rect_filled
     header::nk_command
     rounding::UInt16
     x::Int16
@@ -1473,7 +1453,7 @@ mutable struct nk_command_rect_filled
     color::nk_color
 end
 
-mutable struct nk_command_rect_multi_color
+struct nk_command_rect_multi_color
     header::nk_command
     x::Int16
     y::Int16
@@ -1485,7 +1465,7 @@ mutable struct nk_command_rect_multi_color
     right::nk_color
 end
 
-mutable struct nk_command_triangle
+struct nk_command_triangle
     header::nk_command
     line_thickness::UInt16
     a::nk_vec2i
@@ -1494,7 +1474,7 @@ mutable struct nk_command_triangle
     color::nk_color
 end
 
-mutable struct nk_command_triangle_filled
+struct nk_command_triangle_filled
     header::nk_command
     a::nk_vec2i
     b::nk_vec2i
@@ -1502,7 +1482,7 @@ mutable struct nk_command_triangle_filled
     color::nk_color
 end
 
-mutable struct nk_command_circle
+struct nk_command_circle
     header::nk_command
     x::Int16
     y::Int16
@@ -1512,7 +1492,7 @@ mutable struct nk_command_circle
     color::nk_color
 end
 
-mutable struct nk_command_circle_filled
+struct nk_command_circle_filled
     header::nk_command
     x::Int16
     y::Int16
@@ -1521,7 +1501,7 @@ mutable struct nk_command_circle_filled
     color::nk_color
 end
 
-mutable struct nk_command_arc
+struct nk_command_arc
     header::nk_command
     cx::Int16
     cy::Int16
@@ -1531,7 +1511,7 @@ mutable struct nk_command_arc
     color::nk_color
 end
 
-mutable struct nk_command_arc_filled
+struct nk_command_arc_filled
     header::nk_command
     cx::Int16
     cy::Int16
@@ -1540,7 +1520,7 @@ mutable struct nk_command_arc_filled
     color::nk_color
 end
 
-mutable struct nk_command_polygon
+struct nk_command_polygon
     header::nk_command
     color::nk_color
     line_thickness::UInt16
@@ -1548,14 +1528,14 @@ mutable struct nk_command_polygon
     points::NTuple{1, nk_vec2i}
 end
 
-mutable struct nk_command_polygon_filled
+struct nk_command_polygon_filled
     header::nk_command
     color::nk_color
     point_count::UInt16
     points::NTuple{1, nk_vec2i}
 end
 
-mutable struct nk_command_polyline
+struct nk_command_polyline
     header::nk_command
     color::nk_color
     line_thickness::UInt16
@@ -1563,7 +1543,7 @@ mutable struct nk_command_polyline
     points::NTuple{1, nk_vec2i}
 end
 
-mutable struct nk_command_image
+struct nk_command_image
     header::nk_command
     x::Int16
     y::Int16
@@ -1575,7 +1555,7 @@ end
 
 const nk_command_custom_callback = Ptr{Cvoid}
 
-mutable struct nk_command_custom
+struct nk_command_custom
     header::nk_command
     x::Int16
     y::Int16

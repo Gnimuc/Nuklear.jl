@@ -52,7 +52,7 @@ for trans_unit in ctx.trans_units
 end
 close(api_stream)
 
-write "common" definitions: types, typealiases, etc.
+# write "common" definitions: types, typealiases, etc.
 common_file = joinpath(@__DIR__, "libnuklear_common.jl")
 open(common_file, "w") do f
     println(f, "# Automatically generated using Clang.jl\n")

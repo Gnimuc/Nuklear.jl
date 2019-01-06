@@ -1,7 +1,7 @@
 module Nuklear
 
-include("CEnum.jl")
-using .CEnum
+include("LibNuklear.jl")
+using .LibNuklear
 
 include("backend/GLFW/GLFWBackend.jl")
 using .GLFWBackend
