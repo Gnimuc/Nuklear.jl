@@ -226,14 +226,17 @@ function nk_glfw3_render(anti_alias, max_vertex_buffer::Integer, max_element_buf
     offset = Ptr{nk_draw_index}(0)
     draw_cmd = nk__draw_begin(glfw.ctx, dev.cmds)
     while draw_cmd != C_NULL
-        elem_count_ref = Ref{UInt32}(0)
+        elem_count_ref = Ref{UInt32}()
         clip_rect_ref = Ref{nk_rect}()
         texture_ref = Ref{nk_handle}()
         nk_unpack_draw_command(draw_cmd, elem_count_ref, clip_rect_ref, texture_ref)
         elem_count = elem_count_ref[]
         clip_rect = clip_rect_ref[]
         texture = texture_ref[]
-        elem_count == 0 && continue
+        if elem_count == 0
+            draw_cmd = nk__draw_next(draw_cmd, dev.cmds, glfw.ctx)
+            continue
+        end
         glBindTexture(GL_TEXTURE_2D, texture.id)
         glScissor(
             GLint(clip_rect.x * glfw.fb_scale.x),
