@@ -223,7 +223,7 @@ function nk_glfw3_render(anti_alias, max_vertex_buffer::Integer, max_element_buf
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER)
 
     # iterate over and execute each draw command
-    offset = Ptr{Cvoid}(0)
+    offset = Ptr{nk_draw_index}(0)
     draw_cmd = nk__draw_begin(glfw.ctx, dev.cmds)
     while draw_cmd != C_NULL
         elem_count_ref = Ref{UInt32}(0)
@@ -241,7 +241,7 @@ function nk_glfw3_render(anti_alias, max_vertex_buffer::Integer, max_element_buf
             GLint(clip_rect.w * glfw.fb_scale.x),
             GLint(clip_rect.h * glfw.fb_scale.y))
         glDrawElements(GL_TRIANGLES, GLsizei(elem_count), GL_UNSIGNED_SHORT, offset)
-        offset += elem_count
+        offset += elem_count * Core.sizeof(nk_draw_index)
         draw_cmd = nk__draw_next(draw_cmd, dev.cmds, glfw.ctx)
     end
     nk_clear(glfw.ctx)
