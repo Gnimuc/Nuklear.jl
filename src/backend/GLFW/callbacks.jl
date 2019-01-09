@@ -1,11 +1,16 @@
 function nk_glfw3_char_callback(win::GLFW.Window, codepoint::Char)
-    push!(glfw.text, codepoint)
+    if glfw.text_len < NK_GLFW_TEXT_MAX
+        glfw.text_len += 1
+        glfw.text[glfw.text_len] = codepoint
+    end
+    return nothing
 end
 
 function nk_gflw3_scroll_callback(win::GLFW.Window, xoff::Cdouble, yoff::Cdouble)
     new_x = glfw.scroll.x + Cfloat(xoff)
     new_y = glfw.scroll.y + Cfloat(yoff)
     glfw.scroll = nk_vec2(new_x, new_y)
+    return nothing
 end
 
 function nk_glfw3_mouse_button_callback(window::GLFW.Window, button::GLFW.MouseButton, action::GLFW.Action, mods::Cint)

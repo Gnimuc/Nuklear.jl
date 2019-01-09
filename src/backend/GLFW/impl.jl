@@ -106,7 +106,8 @@ function nk_glfw3_init(win::GLFW.Window, init_state, max_vertex_buffer, max_elem
 
     glfw.is_double_click_down = false
     glfw.double_click_pos = nk_vec2(0, 0)
-    glfw.text = Char[]
+    glfw.text_len = 0
+    glfw.text = Vector{Char}(undef, NK_GLFW_TEXT_MAX)
     return glfw.ctx
 end
 
@@ -179,11 +180,6 @@ function nk_glfw3_render(anti_alias, max_vertex_buffer::Integer, max_element_buf
     vertices = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)
     elements = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY)
 
-    # ptr = Ptr{GLfloat}(vertices)
-    # @show unsafe_load(ptr, 1), unsafe_load(ptr, 2), unsafe_load(ptr, 3), unsafe_load(ptr, 4)
-    # ptr = Ptr{GLushort}(elements)
-    # @show unsafe_load(ptr, 1), unsafe_load(ptr, 2), unsafe_load(ptr, 3), unsafe_load(ptr, 4)
-
     # fill convert configuration
     cfg = nk_set_convert_config(anti_alias, dev.null)
 
@@ -246,8 +242,10 @@ function nk_glfw3_new_frame()
     glfw.fb_scale = nk_vec2(glfw.display_width/glfw.width, glfw.display_height/glfw.height)
 
     nk_input_begin(ctx)
-    for c in glfw.text
-        nk_input_unicode(ctx, c)
+    i = 1
+    while i <= glfw.text_len
+        nk_input_unicode(ctx, glfw.text[i])
+        i += 1
     end
 
     nk_input_key(ctx, NK_KEY_DEL, GLFW.GetKey(win, GLFW.KEY_DELETE))
@@ -290,12 +288,12 @@ function nk_glfw3_new_frame()
     nk_input_button(ctx, NK_BUTTON_LEFT, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_LEFT))
     nk_input_button(ctx, NK_BUTTON_MIDDLE, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_MIDDLE))
     nk_input_button(ctx, NK_BUTTON_RIGHT, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_RIGHT))
-    # dx, dy = round(Int, glfw.double_click_pos.x), round(Int, glfw.double_click_pos.y)
-    # nk_input_button(ctx, NK_BUTTON_DOUBLE, dx, dy, glfw.is_double_click_down)
-    # nk_input_scroll(ctx, glfw.scroll)
+    dx, dy = round(Int, glfw.double_click_pos.x), round(Int, glfw.double_click_pos.y)
+    nk_input_button(ctx, NK_BUTTON_DOUBLE, dx, dy, glfw.is_double_click_down)
+    nk_input_scroll(ctx, glfw.scroll)
     nk_input_end(ctx)
 
-    empty!(glfw.text)
+    glfw.text_len = 0
     glfw.scroll = nk_vec2(0,0)
 end
 
