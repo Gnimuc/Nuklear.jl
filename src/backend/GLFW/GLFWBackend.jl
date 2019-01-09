@@ -1,5 +1,6 @@
 module GLFWBackend
 
+using InteractiveUtils
 using ModernGL
 using GLFW
 using ..LibNuklear

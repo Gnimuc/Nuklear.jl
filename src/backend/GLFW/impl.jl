@@ -95,12 +95,9 @@ function nk_glfw3_init(win::GLFW.Window, init_state, max_vertex_buffer, max_elem
     end
     glfw.ctx = nk_create_context()
     nk_init_default(glfw.ctx, C_NULL)
-    # pending https://github.com/JuliaLang/julia/pull/21912
-    # clipboard_copy = @cfunction(nk_glfw3_clipboard_copy, Cvoid, (nk_handle, Ptr{UInt8}, Cint))
-    # clipboard_paste = @cfunction(nk_glfw3_clipboard_paste, Cvoid, (nk_handle, Ptr{nk_text_edit}))
-    # glfw.ctx.clip.copy = clipboard_copy
-    # glfw.ctx.clip.paste = clipboard_paste
-    # glfw.ctx.clip.userdata = nk_handle(0)
+    clipboard_copy = @cfunction(nk_glfw3_clipboard_copy, Cvoid, (nk_handle, Ptr{UInt8}, Cint))
+    clipboard_paste = @cfunction(nk_glfw3_clipboard_paste, Cvoid, (nk_handle, Ptr{nk_text_edit}))
+    nk_set_clip(glfw.ctx, clipboard_copy, clipboard_paste)
     glfw.last_button_click = 0
     nk_glfw3_device_create()
 

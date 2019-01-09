@@ -22,6 +22,10 @@ function nk_delete_user_font(ufont)
     ccall((:nk_delete_user_font, libnuklear), Cvoid, (Ptr{nk_user_font},), ufont)
 end
 
+function nk_set_clip(ctx, clipboard_copy, clipboard_paste)
+    ccall((:nk_set_clip, libnuklear), Cvoid, (Ptr{nk_context}, nk_plugin_copy, nk_plugin_paste), ctx, clipboard_copy, clipboard_paste)
+end
+
 function nk_set_default_font(ctx, atlas)
     ccall((:nk_set_default_font, libnuklear), Cvoid, (Ptr{nk_context}, Ptr{nk_font_atlas}), ctx, atlas)
 end

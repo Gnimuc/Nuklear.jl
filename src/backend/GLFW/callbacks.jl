@@ -36,6 +36,6 @@ function nk_glfw3_clipboard_paste(usr::nk_handle, edit::Ptr{nk_text_edit})::Cvoi
 end
 
 function nk_glfw3_clipboard_copy(usr::nk_handle, text::Ptr{UInt8}, len::Cint)::Cvoid
-    len != 0 && clipboard(String(text))
+    len != 0 && clipboard(unsafe_string(text, len))
     return nothing
 end
