@@ -6,7 +6,6 @@ function nk_glfw3_device_create()
 
     dev.cmds = nk_create_buffer()
     nk_buffer_init_default(dev.cmds)
-    # dev.null = Ptr{nk_draw_null_texture}(C_NULL) # nk_create_draw_null_texture()
     dev.null = nk_draw_null_texture(nk_handle(0), nk_vec2(0,0))
     dev.prog = glCreateProgram()
     dev.vert_shdr = glCreateShader(GL_VERTEX_SHADER)
@@ -145,30 +144,14 @@ function nk_glfw3_font_stash_end()
     return nothing
 end
 
-function nk_glfw3_device_destroy()
-    dev = glfw.ogl
-    glDetachShader(dev.prog, dev.vert_shdr)
-    glDetachShader(dev.prog, dev.frag_shdr)
-    glDeleteShader(dev.vert_shdr)
-    glDeleteShader(dev.frag_shdr)
-    glDeleteProgram(dev.prog)
-    font_tex_ref = Ref{UInt32}(dev.font_tex)
-    vbo_ref = Ref{UInt32}(dev.vbo)
-    ebo_ref = Ref{UInt32}(dev.ebo)
-    glDeleteTextures(1, font_tex_ref)
-    glDeleteBuffers(1, vbo_ref)
-    glDeleteBuffers(1, ebo_ref)
-    nk_buffer_free(dev.cmds)
-end
-
 function nk_glfw3_render(anti_alias, max_vertex_buffer::Integer, max_element_buffer::Integer)
     dev = glfw.ogl
     orthomatrix = GLfloat[2.0, 0.0, 0.0, 0.0,
                           0.0,-2.0, 0.0, 0.0,
                           0.0, 0.0,-1.0, 0.0,
                          -1.0, 1.0, 0.0, 1.0]
-    orthomatrix[1] *= 1 / GLfloat(glfw.width)
-    orthomatrix[6] *= 1 / GLfloat(glfw.height)
+    orthomatrix[1] /= GLfloat(glfw.width)
+    orthomatrix[6] /= GLfloat(glfw.height)
 
     glEnable(GL_BLEND)
     glBlendEquation(GL_FUNC_ADD)
@@ -207,17 +190,12 @@ function nk_glfw3_render(anti_alias, max_vertex_buffer::Integer, max_element_buf
     # setup buffers to load vertices and elements
     vbo_buffer = nk_create_buffer()
     ebo_buffer = nk_create_buffer()
-    GC.@preserve vbo_buffer ebo_buffer cfg begin
+    GC.@preserve vbo_buffer ebo_buffer vertices elements cfg begin
         nk_buffer_init_fixed(vbo_buffer, vertices, max_vertex_buffer)
         nk_buffer_init_fixed(ebo_buffer, elements, max_element_buffer)
         res = nk_convert(glfw.ctx, dev.cmds, vbo_buffer, ebo_buffer, cfg)
         @assert res == NK_CONVERT_SUCCESS "convert failed!"
     end
-
-    # ptr = Ptr{GLfloat}(vertices)
-    # @show unsafe_load(ptr, 1), unsafe_load(ptr, 2), unsafe_load(ptr, 3), unsafe_load(ptr, 4)
-    # ptr = Ptr{GLushort}(elements)
-    # @show unsafe_load(ptr, 1), unsafe_load(ptr, 2), unsafe_load(ptr, 3), unsafe_load(ptr, 4)
 
     glUnmapBuffer(GL_ARRAY_BUFFER)
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER)
@@ -272,35 +250,34 @@ function nk_glfw3_new_frame()
         nk_input_unicode(ctx, c)
     end
 
-    nk_input_key(ctx, NK_KEY_DEL, GLFW.GetKey(win, GLFW.KEY_DELETE) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_ENTER, GLFW.GetKey(win, GLFW.KEY_ENTER) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_TAB, GLFW.GetKey(win, GLFW.KEY_TAB) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_BACKSPACE, GLFW.GetKey(win, GLFW.KEY_BACKSPACE) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_UP, GLFW.GetKey(win, GLFW.KEY_UP) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_DOWN, GLFW.GetKey(win, GLFW.KEY_DOWN) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_TEXT_START, GLFW.GetKey(win, GLFW.KEY_HOME) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_TEXT_END, GLFW.GetKey(win, GLFW.KEY_END) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_SCROLL_START, GLFW.GetKey(win, GLFW.KEY_HOME) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_SCROLL_END, GLFW.GetKey(win, GLFW.KEY_END) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_SCROLL_DOWN, GLFW.GetKey(win, GLFW.KEY_PAGE_DOWN) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_SCROLL_UP, GLFW.GetKey(win, GLFW.KEY_PAGE_UP) == GLFW.PRESS)
-    nk_input_key(ctx, NK_KEY_SHIFT, GLFW.GetKey(win, GLFW.KEY_LEFT_SHIFT) == GLFW.PRESS ||
-                                    GLFW.GetKey(win, GLFW.KEY_RIGHT_SHIFT) == GLFW.PRESS)
+    nk_input_key(ctx, NK_KEY_DEL, GLFW.GetKey(win, GLFW.KEY_DELETE))
+    nk_input_key(ctx, NK_KEY_ENTER, GLFW.GetKey(win, GLFW.KEY_ENTER))
+    nk_input_key(ctx, NK_KEY_TAB, GLFW.GetKey(win, GLFW.KEY_TAB))
+    nk_input_key(ctx, NK_KEY_BACKSPACE, GLFW.GetKey(win, GLFW.KEY_BACKSPACE))
+    nk_input_key(ctx, NK_KEY_UP, GLFW.GetKey(win, GLFW.KEY_UP))
+    nk_input_key(ctx, NK_KEY_DOWN, GLFW.GetKey(win, GLFW.KEY_DOWN))
+    nk_input_key(ctx, NK_KEY_TEXT_START, GLFW.GetKey(win, GLFW.KEY_HOME))
+    nk_input_key(ctx, NK_KEY_TEXT_END, GLFW.GetKey(win, GLFW.KEY_END))
+    nk_input_key(ctx, NK_KEY_SCROLL_START, GLFW.GetKey(win, GLFW.KEY_HOME))
+    nk_input_key(ctx, NK_KEY_SCROLL_END, GLFW.GetKey(win, GLFW.KEY_END))
+    nk_input_key(ctx, NK_KEY_SCROLL_DOWN, GLFW.GetKey(win, GLFW.KEY_PAGE_DOWN))
+    nk_input_key(ctx, NK_KEY_SCROLL_UP, GLFW.GetKey(win, GLFW.KEY_PAGE_UP))
+    nk_input_key(ctx, NK_KEY_SHIFT, GLFW.GetKey(win, GLFW.KEY_LEFT_SHIFT)  ||
+                                    GLFW.GetKey(win, GLFW.KEY_RIGHT_SHIFT))
 
-    if GLFW.GetKey(win, GLFW.KEY_LEFT_CONTROL) == GLFW.PRESS ||
-       GLFW.GetKey(win, GLFW.KEY_RIGHT_CONTROL) == GLFW.PRESS
-        nk_input_key(ctx, NK_KEY_COPY, GLFW.GetKey(win, GLFW.KEY_C) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_PASTE, GLFW.GetKey(win, GLFW.KEY_V) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_CUT, GLFW.GetKey(win, GLFW.KEY_X) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_TEXT_UNDO, GLFW.GetKey(win, GLFW.KEY_Z) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_TEXT_REDO, GLFW.GetKey(win, GLFW.KEY_R) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_TEXT_WORD_LEFT, GLFW.GetKey(win, GLFW.KEY_LEFT) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_TEXT_WORD_RIGHT, GLFW.GetKey(win, GLFW.KEY_RIGHT) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_TEXT_LINE_START, GLFW.GetKey(win, GLFW.KEY_B) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_TEXT_LINE_END, GLFW.GetKey(win, GLFW.KEY_E) == GLFW.PRESS)
+    if GLFW.GetKey(win, GLFW.KEY_LEFT_CONTROL) || GLFW.GetKey(win, GLFW.KEY_RIGHT_CONTROL)
+        nk_input_key(ctx, NK_KEY_COPY, GLFW.GetKey(win, GLFW.KEY_C))
+        nk_input_key(ctx, NK_KEY_PASTE, GLFW.GetKey(win, GLFW.KEY_V))
+        nk_input_key(ctx, NK_KEY_CUT, GLFW.GetKey(win, GLFW.KEY_X))
+        nk_input_key(ctx, NK_KEY_TEXT_UNDO, GLFW.GetKey(win, GLFW.KEY_Z))
+        nk_input_key(ctx, NK_KEY_TEXT_REDO, GLFW.GetKey(win, GLFW.KEY_R))
+        nk_input_key(ctx, NK_KEY_TEXT_WORD_LEFT, GLFW.GetKey(win, GLFW.KEY_LEFT))
+        nk_input_key(ctx, NK_KEY_TEXT_WORD_RIGHT, GLFW.GetKey(win, GLFW.KEY_RIGHT))
+        nk_input_key(ctx, NK_KEY_TEXT_LINE_START, GLFW.GetKey(win, GLFW.KEY_B))
+        nk_input_key(ctx, NK_KEY_TEXT_LINE_END, GLFW.GetKey(win, GLFW.KEY_E))
     else
-        nk_input_key(ctx, NK_KEY_LEFT, GLFW.GetKey(win, GLFW.KEY_LEFT) == GLFW.PRESS)
-        nk_input_key(ctx, NK_KEY_RIGHT, GLFW.GetKey(win, GLFW.KEY_RIGHT) == GLFW.PRESS)
+        nk_input_key(ctx, NK_KEY_LEFT, GLFW.GetKey(win, GLFW.KEY_LEFT))
+        nk_input_key(ctx, NK_KEY_RIGHT, GLFW.GetKey(win, GLFW.KEY_RIGHT))
         nk_input_key(ctx, NK_KEY_COPY, 0)
         nk_input_key(ctx, NK_KEY_PASTE, 0)
         nk_input_key(ctx, NK_KEY_CUT, 0)
@@ -310,16 +287,33 @@ function nk_glfw3_new_frame()
     x, y = GLFW.GetCursorPos(win)
     x, y = round(Int, x), round(Int, y)
     nk_input_motion(ctx, x, y)
-    nk_input_button(ctx, NK_BUTTON_LEFT, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_LEFT) == GLFW.PRESS)
-    nk_input_button(ctx, NK_BUTTON_MIDDLE, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_MIDDLE) == GLFW.PRESS)
-    nk_input_button(ctx, NK_BUTTON_RIGHT, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_RIGHT) == GLFW.PRESS)
-    dx, dy = round(Int, glfw.double_click_pos.x), round(Int, glfw.double_click_pos.y)
-    nk_input_button(ctx, NK_BUTTON_DOUBLE, dx, dy, glfw.is_double_click_down)
-    nk_input_scroll(ctx, glfw.scroll)
+    nk_input_button(ctx, NK_BUTTON_LEFT, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_LEFT))
+    nk_input_button(ctx, NK_BUTTON_MIDDLE, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_MIDDLE))
+    nk_input_button(ctx, NK_BUTTON_RIGHT, x, y, GLFW.GetMouseButton(win, GLFW.MOUSE_BUTTON_RIGHT))
+    # dx, dy = round(Int, glfw.double_click_pos.x), round(Int, glfw.double_click_pos.y)
+    # nk_input_button(ctx, NK_BUTTON_DOUBLE, dx, dy, glfw.is_double_click_down)
+    # nk_input_scroll(ctx, glfw.scroll)
     nk_input_end(ctx)
 
     empty!(glfw.text)
     glfw.scroll = nk_vec2(0,0)
+end
+
+
+function nk_glfw3_device_destroy()
+    dev = glfw.ogl
+    glDetachShader(dev.prog, dev.vert_shdr)
+    glDetachShader(dev.prog, dev.frag_shdr)
+    glDeleteShader(dev.vert_shdr)
+    glDeleteShader(dev.frag_shdr)
+    glDeleteProgram(dev.prog)
+    font_tex_ref = Ref{UInt32}(dev.font_tex)
+    vbo_ref = Ref{UInt32}(dev.vbo)
+    ebo_ref = Ref{UInt32}(dev.ebo)
+    glDeleteTextures(1, font_tex_ref)
+    glDeleteBuffers(1, vbo_ref)
+    glDeleteBuffers(1, ebo_ref)
+    nk_buffer_free(dev.cmds)
 end
 
 function nk_glfw3_shutdown()
