@@ -32,7 +32,7 @@ const NK_SCROLLBAR_HIDING_TIMEOUT = Float32(4.0)
 
 # Skipping MacroDefinition: nk_foreach ( c , ctx ) for ( ( c ) = nk__begin ( ctx ) ; ( c ) != 0 ; ( c ) = nk__next ( ctx , c ) )
 # Skipping MacroDefinition: nk_draw_foreach ( cmd , ctx , b ) for ( ( cmd ) = nk__draw_begin ( ctx , b ) ; ( cmd ) != 0 ; ( cmd ) = nk__draw_next ( cmd , b , ctx ) )
-# Skipping MacroDefinition: nk_tree_push ( ctx , type , title , state ) nk_tree_push_hashed ( ctx , type , title , state , NK_FILE_LINE , nk_strlen ( NK_FILE_LINE ) , __LINE__ )
+nk_tree_push(ctx, type, title, state) = nk_tree_push_hashed(ctx, type, title, state, string(@__LINE__), length(string(@__LINE__)), @__LINE__)
 # Skipping MacroDefinition: nk_tree_push_id ( ctx , type , title , state , id ) nk_tree_push_hashed ( ctx , type , title , state , NK_FILE_LINE , nk_strlen ( NK_FILE_LINE ) , id )
 # Skipping MacroDefinition: nk_tree_image_push ( ctx , type , img , title , state ) nk_tree_image_push_hashed ( ctx , type , img , title , state , NK_FILE_LINE , nk_strlen ( NK_FILE_LINE ) , __LINE__ )
 # Skipping MacroDefinition: nk_tree_image_push_id ( ctx , type , img , title , state , id ) nk_tree_image_push_hashed ( ctx , type , img , title , state , NK_FILE_LINE , nk_strlen ( NK_FILE_LINE ) , id )
