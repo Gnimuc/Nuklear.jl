@@ -18,7 +18,7 @@ function nk_glfw3_mouse_button_callback(window::GLFW.Window, button::GLFW.MouseB
     x, y = GLFW.GetCursorPos(window)
     if action == GLFW.PRESS
         dt = time_ns()/1e9 - glfw.last_button_click
-        if dt > NK_GLFW_DOUBLE_CLICK_LO && dt < NK_GLFW_DOUBLE_CLICK_HI
+        if NK_GLFW_DOUBLE_CLICK_LO < dt < NK_GLFW_DOUBLE_CLICK_HI
             glfw.is_double_click_down = true
             glfw.double_click_pos = nk_vec2(Cfloat(x), Cfloat(y))
         end
