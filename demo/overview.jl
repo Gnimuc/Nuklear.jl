@@ -24,7 +24,7 @@ else
 end
 
 # set up GLFW error callback
-error_callback(error::Cint, description::Ptr{GLchar}) = @error "GLFW ERROR: code $error msg: $description"
+error_callback(err::GLFW.GLFWError) = @error "GLFW ERROR: code $(err.code) msg: $(err.description)"
 GLFW.SetErrorCallback(error_callback)
 
 # create window
