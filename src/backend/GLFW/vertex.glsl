@@ -1,4 +1,4 @@
-#version 410 core
+#version 150 core
 
 uniform mat4 proj_mat;
 

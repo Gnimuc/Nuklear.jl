@@ -10,8 +10,8 @@ const MAX_VERTEX_BUFFER = 512 * 1024
 const MAX_ELEMENT_BUFFER = 128 * 1024
 
 @static if Sys.isapple()
-    const VERSION_MAJOR = 4
-    const VERSION_MINOR = 1
+    const VERSION_MAJOR = 3
+    const VERSION_MINOR = 3
 end
 
 @static if Sys.isapple()
