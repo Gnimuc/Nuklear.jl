@@ -19,6 +19,8 @@ mutable struct nk_glfw_device
     uniform_tex::GLint
     uniform_proj::GLint
     font_tex::Cint
+    tex_ids::Vector{Cuint}
+    tex_count::Int
     nk_glfw_device() = new()
 end
 

@@ -24,6 +24,7 @@ include("impl.jl")
 export nk_glfw3_device_create, nk_glfw3_device_destroy, nk_glfw3_init, nk_glfw3_shutdown
 export nk_glfw3_font_stash_begin, nk_glfw3_font_stash_end
 export nk_glfw3_device_upload_atlas, nk_glfw3_render, nk_glfw3_new_frame
+export nk_glfw3_create_texture, nk_glfw3_update_texture, nk_glfw3_delete_texture, create_nk_image
 
 function __init__()
     global glfw = nk_glfw()
