@@ -95,5 +95,5 @@ while !GLFW.WindowShouldClose(win)
     GLFW.SwapBuffers(win)
 end
 
-GLFW.DestroyWindow(win)
 nk_glfw3_shutdown()
+GLFW.DestroyWindow(win)
