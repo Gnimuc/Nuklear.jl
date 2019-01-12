@@ -4,6 +4,9 @@ function nk_glfw3_device_create()
     glfw.ogl = nk_glfw_device()
     dev = glfw.ogl
 
+    glfw.ogl.tex_ids = Vector{Cuint}()
+    glfw.ogl.tex_count = 0
+
     dev.cmds = nk_create_buffer()
     nk_buffer_init_default(dev.cmds)
     dev.null = nk_draw_null_texture(nk_handle(0), nk_vec2(0,0))
@@ -43,6 +46,10 @@ function nk_glfw3_device_create()
     status_ref = Ref{GLint}(-1)
     glGetProgramiv(dev.prog, GL_LINK_STATUS, status_ref)
     @assert status_ref[] == GL_TRUE
+    glDetachShader(dev.prog, dev.vert_shdr)
+    glDetachShader(dev.prog, dev.frag_shdr)
+    glDeleteShader(dev.vert_shdr)
+    glDeleteShader(dev.frag_shdr)
 
     dev.uniform_tex = glGetUniformLocation(dev.prog, "tex")
     dev.uniform_proj = glGetUniformLocation(dev.prog, "proj_mat")
@@ -297,15 +304,15 @@ end
 
 function nk_glfw3_device_destroy()
     dev = glfw.ogl
-    glDetachShader(dev.prog, dev.vert_shdr)
-    glDetachShader(dev.prog, dev.frag_shdr)
-    glDeleteShader(dev.vert_shdr)
-    glDeleteShader(dev.frag_shdr)
     glDeleteProgram(dev.prog)
     font_tex_ref = Ref{UInt32}(dev.font_tex)
     vbo_ref = Ref{UInt32}(dev.vbo)
     ebo_ref = Ref{UInt32}(dev.ebo)
     glDeleteTextures(1, font_tex_ref)
+    for tid in dev.tex_ids
+        tid_ref = Ref{UInt32}(tid)
+        glDeleteTextures(1, tid_ref)
+    end
     glDeleteBuffers(1, vbo_ref)
     glDeleteBuffers(1, ebo_ref)
     nk_buffer_free(dev.cmds)
@@ -315,4 +322,36 @@ function nk_glfw3_shutdown()
     nk_font_atlas_clear(glfw.atlas)
     nk_free(glfw.ctx)
     nk_glfw3_device_destroy()
+end
+
+function nk_glfw3_create_texture(width, height; format=GL_RGBA, type=GL_UNSIGNED_BYTE)
+    tex = Ref{GLuint}(0)
+    glGenTextures(1, tex)
+    push!(glfw.ogl.tex_ids, tex[])
+    glfw.ogl.tex_count += 1
+    glBindTexture(GL_TEXTURE_2D, tex[])
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(width), GLsizei(height), 0, format, type, C_NULL)
+    return glfw.ogl.tex_count
+end
+
+function nk_glfw3_update_texture(idx, image, width, height; format=GL_RGBA, type=GL_UNSIGNED_BYTE)
+    glBindTexture(GL_TEXTURE_2D, glfw.ogl.tex_ids[idx])
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, GLsizei(width), GLsizei(height), format, type, image)
+end
+
+function nk_glfw3_delete_texture(idx)
+    tid = glfw.ogl.tex_ids[idx]
+    tid_ref = Ref{UInt32}(tid)
+    glDeleteTextures(1, tid_ref)
+    deleteat!(glfw.ogl.tex_ids, idx)
+    glfw.ogl.tex_count -= 1
+end
+
+function create_nk_image(idx)
+    tid = glfw.ogl.tex_ids[idx]
+    return nk_image(nk_handle(tid), 0, 0, (0,0,0,0))
 end
