@@ -29,5 +29,6 @@ export nk_glfw3_create_texture, nk_glfw3_update_texture, nk_glfw3_delete_texture
 function __init__()
     global glfw = nk_glfw()
 end
+export glfw
 
 end # module

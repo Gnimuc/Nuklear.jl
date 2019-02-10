@@ -62,9 +62,13 @@ end
 # copydeps(dirname(api_file))
 # print_template(joinpath(dirname(api_file), "LibTemplate.jl"))
 
+##
 const HELPER_H = joinpath(@__DIR__, "..", "deps", "usr", "include", "helper.h") |> normpath
 ctx = DefaultContext()
 parse_headers!(ctx, [HELPER_H], includes=[LLVM_INCLUDE])
+ctx.libname = "libnuklear"
+ctx.options["is_function_strictly_typed"] = false
+ctx.options["is_struct_mutable"] = false  # for nested struct
 api_file = joinpath(@__DIR__, "helper_api.jl")
 api_stream = open(api_file, "w")
 for trans_unit in ctx.trans_units

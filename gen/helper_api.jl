@@ -37,3 +37,7 @@ end
 function nk_unpack_draw_command(cmd, elem_count, clip_rect, texture)
     ccall((:nk_unpack_draw_command, libnuklear), Cvoid, (Ptr{nk_draw_command}, Ptr{UInt32}, Ptr{nk_rect}, Ptr{nk_handle}), cmd, elem_count, clip_rect, texture)
 end
+
+function nk_get_font_handle(font)
+    ccall((:nk_get_font_handle, libnuklear), Ptr{nk_user_font}, (Ptr{nk_font},), font)
+end

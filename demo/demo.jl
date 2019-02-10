@@ -37,8 +37,12 @@ glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 ctx = nk_glfw3_init(win, NK_GLFW3_INSTALL_CALLBACKS, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER)
 
 # init font
+prefix = joinpath(@__DIR__, "extra_font")
 nk_glfw3_font_stash_begin()
+roboto = nk_font_atlas_add_from_file(glfw.atlas, joinpath(prefix, "Roboto-Bold.ttf"), 18, C_NULL)
 nk_glfw3_font_stash_end()
+roboto_handle = nk_get_font_handle(roboto)
+nk_style_set_font(ctx, roboto_handle)
 
 # states
 const EASY = 0
