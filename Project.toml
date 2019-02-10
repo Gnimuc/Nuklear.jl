@@ -1,7 +1,7 @@
 name = "Nuklear"
 uuid = "8d0e9305-38f4-5c97-8ceb-e1429a1a2d0c"
 authors = ["Yupei Qi <qiyupei@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 BinaryProvider = "b99e7846-7c00-51b0-8f62-c81ae34c0232"
